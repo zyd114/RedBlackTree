@@ -28,7 +28,7 @@ class RedBlackTree {
 		T kth(int);
 		T get_prev(T);
 		T get_succ(T);
-		
+
 		void previs(node*);
 		void invis(node*);
 		void postvis(node*);
@@ -45,17 +45,17 @@ struct RedBlackTree<T>::node {
 	 * {X}	X is unknown(red/black).
 	 */
 	T val;
-	bool color;		//1为红，0为黑 
+	bool color;		//1为红，0为黑
 	node *father, *ch[2];
-	#define left ch[0]
-	#define right ch[1]
+#define left ch[0]
+#define right ch[1]
 	int siz;
 	node(T v = T(), bool col = true, node* f = NULL,
-		node* l = NULL, node* r = NULL , int s = 1)
+	     node* l = NULL, node* r = NULL , int s = 1)
 		: val(v), color(col), father(f), siz(s) {
-			left = l;
-			right = r;
-		}
+		left = l;
+		right = r;
+	}
 	node* prev() {
 		node* x = left;
 		if(x == NULL)	return NULL;
@@ -155,13 +155,13 @@ void RedBlackTree<T>::SolveDoubleRed(node* x) {
 	}
 	node* p = x->father;
 	if(p == root) {
-    	// Case 3: Parent is root and is RED
-    	//   Paint parent to BLACK.
-    	//    <P>         [P]
-    	//     |   ====>   |
-    	//    <N>         <N>
-    	p->color = BLACK;
-    	return;
+		// Case 3: Parent is root and is RED
+		//   Paint parent to BLACK.
+		//    <P>         [P]
+		//     |   ====>   |
+		//    <N>         <N>
+		p->color = BLACK;
+		return;
 	}
 	if(x->hasUncle() && x->uncle()->color == RED) {
 		// Case 4: Both parent and uncle are RED
@@ -181,30 +181,30 @@ void RedBlackTree<T>::SolveDoubleRed(node* x) {
 	}
 	// Case 5 & 6: parent is RED, uncle is BLACK(or NULL)
 	if(x->direction() != p->direction()) {
-        // Case 5: Current node is the opposite direction as parent
-        //   Step 1. Rotate x to parent's position.
-        //   Step 2. Goto Case 6.
-        //      [G]                 [G]
-        //      / \    rotate(P)    / \
-        //    <P> [U]  ========>  <N> [U]
-        //      \                 /
-        //      <N>             <P>
+		// Case 5: Current node is the opposite direction as parent
+		//   Step 1. Rotate x to parent's position.
+		//   Step 2. Goto Case 6.
+		//      [G]                 [G]
+		//      / \    rotate(P)    / \
+		//    <P> [U]  ========>  <N> [U]
+		//      \                 /
+		//      <N>             <P>
 		rotate(x);
 		x = p;			//Now P is the child of double red.
 		p = x->father;	//reset p to x's father
 	}
-    // Case 6: Current node is the same direction as parent
-    //   Step 1. Rotate parent to grandparent's position
-    //   Step 2. Paint parent (before rotate) to BLACK;
-    //           Paint grandparent (before rotate) to RED.
-    //        [G]                 <P>               [P]
-    //        / \    rotate(G)    / \    repaint    / \
-    //      <P> [U]  ========>  <N> [G]  ======>  <N> <G>
-    //      /                         \                 \
-    //    <N>                         [U]               [U]
-    rotate(p);				//rotate x's parent
-    p->color = BLACK;
-    x->sibling()->color = RED;	//repaint
+	// Case 6: Current node is the same direction as parent
+	//   Step 1. Rotate parent to grandparent's position
+	//   Step 2. Paint parent (before rotate) to BLACK;
+	//           Paint grandparent (before rotate) to RED.
+	//        [G]                 <P>               [P]
+	//        / \    rotate(G)    / \    repaint    / \
+	//      <P> [U]  ========>  <N> [G]  ======>  <N> <G>
+	//      /                         \                 \
+	//    <N>                         [U]               [U]
+	rotate(p);				//rotate x's parent
+	p->color = BLACK;
+	x->sibling()->color = RED;	//repaint
 }
 
 #define col(a) (a == RED ? "Red" : "Black")
@@ -279,20 +279,20 @@ bool RedBlackTree<T>::remove(T v, node* x) {
 		return true;
 	}
 	if(x->left != NULL && x->right != NULL) {
-    	// Case 1: If the node is strictly internal
-    	//   Step 1. Find the successor S with the smallest key
-    	//           and its parent P on the right subtree.
-    	//   Step 2. Swap the data (key and value) of S and N,
-    	//           S is the node that will be deleted in place of N.
-    	//   Step 3. N = S, goto Case 2, 3
-    	//     |                    |
-    	//     N                    S
-    	//    / \                  / \
-    	//   L  ..   swap(N, S)   L  ..
-    	//       |   =========>       |
-    	//       P                    P
-    	//      / \                  / \
-    	//     S  ..                N  ..
+		// Case 1: If the node is strictly internal
+		//   Step 1. Find the successor S with the smallest key
+		//           and its parent P on the right subtree.
+		//   Step 2. Swap the data (key and value) of S and N,
+		//           S is the node that will be deleted in place of N.
+		//   Step 3. N = S, goto Case 2, 3
+		//     |                    |
+		//     N                    S
+		//    / \                  / \
+		//   L  ..   swap(N, S)   L  ..
+		//       |   =========>       |
+		//       P                    P
+		//      / \                  / \
+		//     S  ..                N  ..
 //		node* succ = x->succ();
 		x->siz--;
 		node* rt = x->right;
@@ -306,27 +306,27 @@ bool RedBlackTree<T>::remove(T v, node* x) {
 		x = succ;
 	}
 	if(x->left == NULL && x->right == NULL) {
-    	// Case 2: Current node is a leaf
-    	//   Step 1. Unlink and remove it.
-    	//   Step 2. If N is BLACK, maintain N;
-    	//           If N is RED, do nothing.
-    	
+		// Case 2: Current node is a leaf
+		//   Step 1. Unlink and remove it.
+		//   Step 2. If N is BLACK, maintain N;
+		//           If N is RED, do nothing.
+
 		// The maintain operation won't change the node itself,
-    	//  so we can perform maintain operation before unlink the node.
-    	x->siz = 0;
-    	if(x->color == BLACK) {
+		//  so we can perform maintain operation before unlink the node.
+		x->siz = 0;
+		if(x->color == BLACK) {
 			SolveDoubleBlack(x);
 		}
 		x->father->ch[x->direction()] = NULL;
 		x->father->pushup();
 		return true;
 	}
-    // Case 3: Current node has a single left or right child
-    //   Step 1. Replace N with its child
-    //   Step 2. If N is BLACK, maintain N
-    node* replacement = (x->left != NULL ? x->left : x->right);
-    if(x == root) {
-    	root = replacement;
+	// Case 3: Current node has a single left or right child
+	//   Step 1. Replace N with its child
+	//   Step 2. If N is BLACK, maintain N
+	node* replacement = (x->left != NULL ? x->left : x->right);
+	if(x == root) {
+		root = replacement;
 	} else {
 		node* parent = x->father;
 		parent->ch[x->direction()] = replacement;
@@ -340,7 +340,7 @@ bool RedBlackTree<T>::remove(T v, node* x) {
 			SolveDoubleBlack(replacement);
 		}
 	}
-    return true;
+	return true;
 }
 
 template<typename T>
@@ -348,17 +348,17 @@ void RedBlackTree<T>::SolveDoubleBlack(node* x) {
 	if(x == root)	return;
 	node* sibling = x->sibling();
 	if(sibling->color == RED) {
-    	// Case 1: Sibling is RED, parent and nephews must be BLACK
-    	//   Step 1. Rotate N's sibling to P's position
-    	//   Step 2. Paint S to BLACK, P to RED
-    	//   Step 3. Goto Case 2, 3, 4, 5
-    	//      [P]                   <S>               [S]
-    	//      / \    l-rotate(P)    / \    repaint    / \
-    	//    [N] <S>  ==========>  [P] [D]  ======>  <P> [D]
-    	//        / \               / \               / \
-    	//      [C] [D]           [N] [C]           [N] [C]
-    	node* parent = x->father;
-    	//Step 1
+		// Case 1: Sibling is RED, parent and nephews must be BLACK
+		//   Step 1. Rotate N's sibling to P's position
+		//   Step 2. Paint S to BLACK, P to RED
+		//   Step 3. Goto Case 2, 3, 4, 5
+		//      [P]                   <S>               [S]
+		//      / \    l-rotate(P)    / \    repaint    / \
+		//    [N] <S>  ==========>  [P] [D]  ======>  <P> [D]
+		//        / \               / \               / \
+		//      [C] [D]           [N] [C]           [N] [C]
+		node* parent = x->father;
+		//Step 1
 		rotate(sibling);
 		//Step 2
 		sibling->color = BLACK;
@@ -374,65 +374,65 @@ void RedBlackTree<T>::SolveDoubleBlack(node* x) {
 	bool distantBlack = (distantNephew == NULL) || (distantNephew->color == BLACK);
 	if(closeBlack && distantBlack) {
 		if(x->father->color == RED) {
-        	// Case 2: Sibling and nephews are BLACK, parent is RED
-        	//   Swap the color of P and S
-        	//      <P>             [P]
-        	//      / \             / \
-        	//    [N] [S]  ====>  [N] <S>
-        	//        / \             / \
-        	//      [C] [D]         [C] [D]
-        	sibling->color = RED;
-        	x->father->color = BLACK;
+			// Case 2: Sibling and nephews are BLACK, parent is RED
+			//   Swap the color of P and S
+			//      <P>             [P]
+			//      / \             / \
+			//    [N] [S]  ====>  [N] <S>
+			//        / \             / \
+			//      [C] [D]         [C] [D]
+			sibling->color = RED;
+			x->father->color = BLACK;
 		} else {
-        	// Case 3: Sibling, parent and nephews are all black
-        	//   Step 1. Paint S to RED
-        	//   Step 2. Recursively maintain P
-        	//      [P]             [P]
-        	//      / \             / \
-        	//    [N] [S]  ====>  [N] <S>
-        	//        / \             / \
-        	//      [C] [D]         [C] [D]
-        	sibling->color = RED;
-        	SolveDoubleBlack(x->father);
+			// Case 3: Sibling, parent and nephews are all black
+			//   Step 1. Paint S to RED
+			//   Step 2. Recursively maintain P
+			//      [P]             [P]
+			//      / \             / \
+			//    [N] [S]  ====>  [N] <S>
+			//        / \             / \
+			//      [C] [D]         [C] [D]
+			sibling->color = RED;
+			SolveDoubleBlack(x->father);
 		}
 	} else {
 		bool closeRed = (closeNephew != NULL) && (closeNephew->color == RED);
 		if(closeRed && distantBlack) {
-	        // Case 4: Sibling is BLACK, close nephew is RED,
-	        //         distant nephew is BLACK
-	        //   Step 1. Rotate close nephew to sibling's position
-	        //   Step 2. Swap the color of close nephew and sibling
-	        //   Step 3. Goto case 5
-	        //                            {P}                {P}
-	        //      {P}                   / \                / \
-	        //      / \    r-rotate(S)  [N] <C>   repaint  [N] [C]
-	        //    [N] [S]  ==========>        \   ======>        \
-	        //        / \                     [S]                <S>
-	        //      <C> [D]                     \                  \
-	        //                                  [D]                [D]
-			
+			// Case 4: Sibling is BLACK, close nephew is RED,
+			//         distant nephew is BLACK
+			//   Step 1. Rotate close nephew to sibling's position
+			//   Step 2. Swap the color of close nephew and sibling
+			//   Step 3. Goto case 5
+			//                            {P}                {P}
+			//      {P}                   / \                / \
+			//      / \    r-rotate(S)  [N] <C>   repaint  [N] [C]
+			//    [N] [S]  ==========>        \   ======>        \
+			//        / \                     [S]                <S>
+			//      <C> [D]                     \                  \
+			//                                  [D]                [D]
+
 			//Step 1
 			rotate(closeNephew);
 			//Step 2
 			closeNephew->color = BLACK;
 			sibling->color = RED;
-        	// Update sibling and nephews after rotation
+			// Update sibling and nephews after rotation
 			sibling = x->sibling();
 			xdir = x->direction();
 			closeNephew = sibling->ch[xdir];
 			distantNephew = sibling->ch[xdir ^ 1];
 		}
-    	// Case 5: Sibling is BLACK, close nephew is unknown,
-    	//         distant nephew is RED
-    	//      {P}                   [S]                 {S}
-    	//      / \    l-rotate(P)    / \    repaint     /  \
-    	//    [N] [S]  ==========>  {P} <D>  =======>  [P]  [D]
-    	//        / \               / \                / \
-    	//      {C} <D>           [N] {C}            [N] {C}
+		// Case 5: Sibling is BLACK, close nephew is unknown,
+		//         distant nephew is RED
+		//      {P}                   [S]                 {S}
+		//      / \    l-rotate(P)    / \    repaint     /  \
+		//    [N] [S]  ==========>  {P} <D>  =======>  [P]  [D]
+		//        / \               / \                / \
+		//      {C} <D>           [N] {C}            [N] {C}
 		//   Step 1. Rotate sibling to P's position
 		//   Step 2. Swap the color of parent and sibling.
 		//			 Paint distant nephew to BLACK if it is not null.
-		
+
 		//Step 1
 		rotate(sibling);
 		//Step 2
